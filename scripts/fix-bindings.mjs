@@ -4,8 +4,9 @@
 //  - generate an index.ts barrel.
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const dir = new URL("../src/types/generated/", import.meta.url).pathname;
+const dir = fileURLToPath(new URL("../src/types/generated/", import.meta.url));
 const files = readdirSync(dir).filter((f) => f.endsWith(".ts") && f !== "index.ts").sort();
 for (const f of files) {
   const p = join(dir, f);
