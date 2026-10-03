@@ -16,10 +16,13 @@ use std::sync::Arc;
 use std::time::Duration;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
-fn kill_bbx_sessions() {
-    // Session process names vary across OpenSSH builds, so match the bbx user
-    // rather than relying on a specific sshd command line shape.
-    let _ = std::process::Command::new("pkill").args(["-KILL", "-u", "bbx"]).status();
+async fn kill_bbx_sessions(conn: &brainbox_core::ssh::ServerConnection) {
+    // Run the kill from the remote bbx account. The GitHub runner cannot
+    // signal the remote user's processes directly.
+    let _ = tokio::time::timeout(
+        Duration::from_secs(3),
+        exec(conn, "pkill -KILL -u bbx || true", ExecOptions::timeout(2)),
+    ).await;
 }
 
 fn text(ev: &Mutex<Vec<TerminalEvent>>) -> String {
@@ -92,7 +95,7 @@ async fn recovers_connection_terminal_and_tunnels() {
     tun.start(&rt.id).await.unwrap();
 
     // 💥 Drop every session server-side.
-    kill_bbx_sessions();
+    kill_bbx_sessions(&conn).await;
 
     assert!(until(|| events.lock().iter().any(|e| matches!(e, TerminalEvent::Suspended)), 15).await, "terminal suspended");
     let reconnecting = h.sink.named(names::CONNECTION_STATUS).iter().any(|v| v["state"]["state"] == "reconnecting");
