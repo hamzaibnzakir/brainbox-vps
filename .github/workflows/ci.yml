@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-linux:
+    name: Tests (Linux, real sshd)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - uses: dtolnay/rust-toolchain@stable
+        with: { components: clippy }
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: src-tauri }
+      - name: System packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf \
+            openssh-server tmux git sudo xvfb webkit2gtk-driver
+      - run: npm ci
+      - name: Start test sshd
+        run: sudo bash scripts/test-sshd.sh
+      - name: Rust lint
+        run: cargo clippy --workspace --all-targets -- -D warnings
+        working-directory: src-tauri
+      - name: Rust tests (unit + integration against sshd)
+        run: BBX_TEST_SSH=1 cargo test -p brainbox-core
+        working-directory: src-tauri
+      - run: npm run typecheck
+      - run: npm test
+      - name: Browser E2E (mock backend)
+        run: |
+          npx playwright install --with-deps chromium
+          npm run build:mock
+          npx playwright test
+        env: { PLAYWRIGHT_CHROMIUM_PATH: "" }
+      - name: Real-app E2E (tauri-driver)
+        run: |
+          cargo install tauri-driver --locked
+          npx tauri build --no-bundle
+          sudo -E env "PATH=$PATH" xvfb-run -a node e2e-tauri/run.mjs
+
+  build-windows:
+    name: Build Windows installers
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: src-tauri }
+      - run: npm ci
+      - run: npm test
+      - name: Rust unit tests
+        run: cargo test -p brainbox-core --lib
+        working-directory: src-tauri
+      - name: Build MSI + NSIS
+        run: npx tauri build
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: brainbox-vps-windows
+          path: |
+            src-tauri/target/release/bundle/msi/*.msi
+            src-tauri/target/release/bundle/nsis/*.exe

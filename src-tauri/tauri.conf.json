@@ -1,0 +1,71 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Brainbox VPS",
+  "version": "0.1.0",
+  "identifier": "com.brainbox.vps",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "label": "main",
+        "title": "Brainbox VPS",
+        "width": 1360,
+        "height": 860,
+        "minWidth": 900,
+        "minHeight": 560,
+        "center": true,
+        "decorations": false,
+        "shadow": true,
+        "resizable": true,
+        "visible": false,
+        "dragDropEnabled": true,
+        "backgroundColor": "#0b0b12"
+      }
+    ],
+    "security": {
+      "csp": {
+        "default-src": "'self'",
+        "script-src": "'self'",
+        "style-src": "'self' 'unsafe-inline'",
+        "img-src": "'self' data: blob:",
+        "font-src": "'self' data:",
+        "worker-src": "'self' blob:",
+        "connect-src": "'self' ipc: http://ipc.localhost"
+      },
+      "freezePrototype": false
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEQ0MjJCNTBCMEU5MTI1RTkKUldUcEpaRU9DN1VpMUdkS3d6d0ZqQ1Y1OFBHYzVwNEsxQlZhY003c3N0dkUyR0xheG9qU2pUK1MK",
+      "endpoints": ["https://github.com/YOUR_GITHUB_USER/brainbox-vps/releases/latest/download/latest.json"],
+      "windows": { "installMode": "passive" }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["msi", "nsis"],
+    "createUpdaterArtifacts": true,
+    "publisher": "Brainbox",
+    "copyright": "© 2026 Brainbox",
+    "category": "DeveloperTool",
+    "shortDescription": "Brainbox VPS — your entire server workstation",
+    "longDescription": "SSH terminals, SFTP file manager, remote editor, monitoring, Docker, services, logs, tunnels, Git, broadcast commands and an approval-gated AI assistant in one Windows app.",
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "windows": {
+      "webviewInstallMode": { "type": "downloadBootstrapper" },
+      "wix": { "language": "en-US" },
+      "nsis": {
+        "installMode": "currentUser",
+        "displayLanguageSelector": false,
+        "installerIcon": "icons/icon.ico"
+      }
+    }
+  }
+}

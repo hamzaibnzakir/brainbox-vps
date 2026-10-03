@@ -1,0 +1,11 @@
+Brainbox VPS
+
+This is an original application. During development the MIT-licensed project
+"Wrolp" (Copyright (c) 2026 Wrolp) was studied as a technical reference for
+how an SSH desktop client can be structured. No Wrolp branding, logos, colors,
+layouts, wording, screenshots or other assets are used in Brainbox VPS.
+
+Third-party open-source components (Tauri, russh, russh-sftp, React, xterm.js,
+Monaco Editor, Tailwind CSS, lucide icons, Inter and JetBrains Mono fonts, and
+the crates/packages listed in Cargo.lock and package-lock.json) are used under
+their respective licenses.

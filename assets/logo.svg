@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8b5cf6"/>
+      <stop offset="0.55" stop-color="#6d3df5"/>
+      <stop offset="1" stop-color="#2563eb"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.3" cy="0.2" r="0.9">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="0.6" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="top" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#e9e3ff"/>
+    </linearGradient>
+  </defs>
+  <rect x="32" y="32" width="960" height="960" rx="228" fill="url(#bg)"/>
+  <rect x="32" y="32" width="960" height="960" rx="228" fill="url(#glow)"/>
+  <!-- isometric box -->
+  <g transform="translate(512 548)">
+    <path d="M0 -300 L260 -150 L0 0 L-260 -150 Z" fill="url(#top)"/>
+    <path d="M-260 -150 L0 0 L0 300 L-260 150 Z" fill="#ffffff" fill-opacity="0.78"/>
+    <path d="M260 -150 L0 0 L0 300 L260 150 Z" fill="#ffffff" fill-opacity="0.52"/>
+    <!-- neural nodes on the lid -->
+    <g stroke="#6d3df5" stroke-width="22" stroke-linecap="round" fill="none">
+      <path d="M-110 -150 L0 -215 L110 -150 L0 -85 Z" stroke-opacity="0.35"/>
+      <path d="M-110 -150 L110 -150 M0 -215 L0 -85"/>
+    </g>
+    <g fill="#6d3df5">
+      <circle cx="-110" cy="-150" r="30"/>
+      <circle cx="110" cy="-150" r="30"/>
+      <circle cx="0" cy="-215" r="30"/>
+      <circle cx="0" cy="-85" r="30"/>
+      <circle cx="0" cy="-150" r="40" fill="#22d3ee"/>
+    </g>
+    <!-- terminal prompt on the front-left face (face-plane transform) -->
+    <g transform="matrix(0.866 0.5 0 1 -260 -150)" stroke="#5b21b6" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M78 120 L128 160 L78 200"/>
+      <path d="M150 205 L212 205"/>
+    </g>
+  </g>
+</svg>

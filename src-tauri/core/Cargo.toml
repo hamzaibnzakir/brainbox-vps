@@ -1,0 +1,42 @@
+[package]
+name = "brainbox-core"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Brainbox VPS core: SSH, SFTP, monitoring, tunnels, storage and security"
+
+[dependencies]
+russh = "0.63"
+russh-sftp = "3"
+tokio = { version = "1", features = ["full"] }
+tokio-util = { version = "0.7", features = ["io"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+uuid = { version = "1", features = ["v4", "serde"] }
+rusqlite = { version = "0.31", features = ["bundled"] }
+aes-gcm = "0.10"
+rand = "0.8"
+base64 = "0.22"
+zeroize = { version = "1", features = ["derive"] }
+chrono = { version = "0.4", features = ["serde"] }
+dirs = "6"
+log = "0.4"
+async-trait = "0.1"
+futures = "0.3"
+portable-pty = "0.8"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "stream"] }
+ts-rs = { version = "10", features = ["serde-compat", "chrono-impl", "uuid-impl"] }
+regex = "1"
+once_cell = "1"
+parking_lot = "0.12"
+bytes = "1"
+trash = "5"
+walkdir = "2"
+
+[target.'cfg(windows)'.dependencies]
+keyring = { version = "3", features = ["windows-native"] }
+
+[dev-dependencies]
+tempfile = "3"
+tokio = { version = "1", features = ["full", "test-util"] }
