@@ -215,7 +215,7 @@ Host *
         assert_eq!(web.host, "prod-web.example.com");
         assert_eq!(web.port, 2222);
         assert_eq!(web.username.as_deref(), Some("deploy"));
-        assert_eq!(web.identity_file.as_deref(), Some(Path::new("/home/u/.ssh/prod_ed25519").to_string_lossy().as_ref()));
+        assert_eq!(web.identity_file.as_deref().map(|p| p.replace('\\', "/")), Some("/home/u/.ssh/prod_ed25519".to_string()));
 
         let db = &hosts[1];
         assert_eq!(db.port, 2222, "first obtained value wins");
