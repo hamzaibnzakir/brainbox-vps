@@ -13,6 +13,9 @@ mkdir -p /home/bbx/.ssh
 [ -f "$DIR/client_ed25519" ] || ssh-keygen -q -t ed25519 -N '' -f "$DIR/client_ed25519"
 [ -f "$DIR/client_rsa_enc" ] || ssh-keygen -q -t rsa -b 2048 -N 'keypass' -f "$DIR/client_rsa_enc"
 cat "$DIR/client_ed25519.pub" "$DIR/client_rsa_enc.pub" > /home/bbx/.ssh/authorized_keys
+# The integration tests run as the GitHub runner user, not root, so the
+# throwaway client private keys must be readable by that test process.
+chmod 644 "$DIR/client_ed25519" "$DIR/client_rsa_enc"
 chown -R bbx:bbx /home/bbx/.ssh; chmod 700 /home/bbx/.ssh; chmod 600 /home/bbx/.ssh/authorized_keys
 mkdir -p /run/sshd
 for port in 2222 2223; do
