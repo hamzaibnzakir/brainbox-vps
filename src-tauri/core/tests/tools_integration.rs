@@ -73,10 +73,15 @@ async fn monitoring_processes_ports_services() {
     let ports = monitoring::list_ports(&c).await.unwrap();
     assert!(ports.iter().any(|p| p.port == 2222 && p.protocol == "tcp"), "{ports:?}");
 
-    // Services: no systemd in this sandbox → clear explanation instead of a broken view.
-    let e = monitoring::list_services(&c).await.unwrap_err();
-    assert_eq!(e.code, ErrorCode::SystemdUnavailable);
-    assert!(!e.causes.is_empty());
+    // Services: accept either a working systemd environment or the explicit
+    // unavailable response used by minimal test sandboxes.
+    match monitoring::list_services(&c).await {
+        Ok(services) => assert!(!services.is_empty(), "systemd returned no services"),
+        Err(e) => {
+            assert_eq!(e.code, ErrorCode::SystemdUnavailable);
+            assert!(!e.causes.is_empty());
+        }
+    }
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
