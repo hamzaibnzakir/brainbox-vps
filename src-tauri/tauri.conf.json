@@ -44,7 +44,7 @@
   "plugins": {
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEQ0MjJCNTBCMEU5MTI1RTkKUldUcEpaRU9DN1VpMUdkS3d6d0ZqQ1Y1OFBHYzVwNEsxQlZhY003c3N0dkUyR0xheG9qU2pUK1MK",
-      "endpoints": ["https://github.com/YOUR_GITHUB_USER/brainbox-vps/releases/latest/download/latest.json"],
+      "endpoints": ["https://github.com/hamzaibnzakir/brainbox-vps/releases/latest/download/latest.json"],
       "windows": { "installMode": "passive" }
     }
   },
