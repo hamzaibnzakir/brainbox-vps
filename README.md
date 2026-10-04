@@ -99,8 +99,8 @@ The updater is enabled and signed. Before publishing releases:
 
 1. Use the signing key pair that came with this project, or make your own with `npx tauri signer generate -w brainbox-updater.key` and paste the new public key into `plugins.updater.pubkey` in `src-tauri/tauri.conf.json`.
 2. Add the private key to your GitHub repo secrets as `TAURI_SIGNING_PRIVATE_KEY` (and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` if it has one). **Never commit the private key.**
-3. Replace `YOUR_GITHUB_USER` in `plugins.updater.endpoints` with your GitHub account.
-4. Bump `version` in `src-tauri/tauri.conf.json`, then push a matching tag (`git tag v0.2.0 && git push --tags`). The **Release** workflow builds signed MSI/EXE installers and `latest.json` as a draft GitHub release; publish it and installed apps will offer the update.
+3. The updater endpoint is already configured for `hamzaibnzakir/brainbox-vps`, so no endpoint edit is needed.
+4. Bump `version` in `src-tauri/tauri.conf.json`, then push a matching tag, for example `git tag v0.2.0 && git push --tags`. The **Release** workflow builds signed MSI/EXE installers and `latest.json` as a draft GitHub release; publish it and installed apps will offer the update.
 
 Windows SmartScreen will warn about unsigned installers until you add an Authenticode code-signing certificate (`bundle.windows.certificateThumbprint` or a signing command in `tauri.conf.json`).
 
