@@ -18,10 +18,11 @@ use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
 async fn kill_bbx_sessions(conn: &brainbox_core::ssh::ServerConnection) {
     // Run the kill from the remote bbx account. The GitHub runner cannot
-    // signal the remote user's processes directly.
+    // signal the remote user's processes directly. Kill only the per-session
+    // sshd children so the tmux server itself survives the transport drop.
     let _ = tokio::time::timeout(
         Duration::from_secs(3),
-        exec(conn, "pkill -KILL -u bbx || true", ExecOptions::timeout(2)),
+        exec(conn, "pkill -KILL -u bbx -x sshd || true", ExecOptions::timeout(2)),
     ).await;
 }
 
